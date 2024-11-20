@@ -4,5 +4,5 @@ import('flixel.FlxSprite');
 function create() {
    var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('crash'));
    spr.scrollFactor.set();
-   add(spr)
+   add(spr);
 }
