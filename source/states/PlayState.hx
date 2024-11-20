@@ -37,6 +37,11 @@ import states.editors.*;
 import states.menu.*;
 import subStates.*;
 
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
+
 using StringTools;
 
 class PlayState extends MusicBeatState
@@ -71,7 +76,7 @@ class PlayState extends MusicBeatState
 	// are on the Timings.hx class!!
 
 	// hscript!!
-	public var loadedScripts:Array<Iris> = [];
+	public var loadedScripts:Array<Hscript> = [];
 	
 	// objects
 	public var stageBuild:Stage;
@@ -194,11 +199,18 @@ class PlayState extends MusicBeatState
 		//scriptPaths.push("songs/bopeebo/script.hxc");
 		#end
 
-		for(path in scriptPaths)
+		for (path in scriptPaths)
 		{
-			var scriptConfig:IrisConfig = new IrisConfig(path, true, true);
-			var newScript:Iris = new Iris(Paths.script('$path'), scriptConfig);
-			loadedScripts.push(newScript);
+			if (FileSystem.exists(path) && FileSystem.isDirectory(path))
+			{
+				for (file in FileSystem.readDirectory(path)) 
+				{
+					if (file.endsWith(".hxc"))
+					{
+						loadedScripts.push(new Hscript(path + file));
+					}
+				}
+			}
 		}
 
 		unspawnNotes = ChartLoader.getChart(SONG);
@@ -1883,15 +1895,11 @@ class PlayState extends MusicBeatState
 
 	public function callScript(fun:String, ?args:Array<Dynamic>)
 	{
-		for(script in loadedScripts) {
-			@:privateAccess {
-				var ny: Dynamic = script.interp.variables.get(fun);
-				try {
-					if(ny != null && Reflect.isFunction(ny))
-						script.call(fun, args);
-				} catch(e) {
-					Logs.print('error parsing script: ' + e, ERROR);
-				}
+		for (i in 0...loadedScripts.length) {
+			try {
+				loadedScripts[i].call(fun, args);
+			} catch(e) {
+				Logs.print('error parsing script: ' + e, ERROR);
 			}
 		}
 	}
