@@ -70,7 +70,7 @@ class Hscript extends FlxBasic {
         script.execute();
     }
 
-    public function call(name:String, ?args:Array<Dynamic> = []) {
+    public function call(name:String, args:Array<Dynamic>) {
         script.call(name, args);
     }
 }
