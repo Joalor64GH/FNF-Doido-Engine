@@ -10,6 +10,8 @@ import sys.io.File;
 import crowplexus.iris.Iris;
 import crowplexus.iris.IrisConfig;
 
+import states.PlayState;
+
 using StringTools;
 
 class Hscript extends FlxBasic {
@@ -38,14 +40,14 @@ class Hscript extends FlxBasic {
 						Reflect.setField(daEnumField, daConstructor, daEnum.createByName(daConstructor));
 
 					if (asDa != null && asDa != '')
-						setVariable(asDa, daEnumField);
+						script.set(asDa, daEnumField);
 					else
-						setVariable(splitClassName[splitClassName.length - 1], daEnumField);
+						script.set(splitClassName[splitClassName.length - 1], daEnumField);
 				} else {
 					if (asDa != null && asDa != '')
-						setVariable(asDa, daClass);
+						script.set(asDa, daClass);
 					else
-						setVariable(splitClassName[splitClassName.length - 1], daClass);
+						script.set(splitClassName[splitClassName.length - 1], daClass);
 				}
 			}
 		});
